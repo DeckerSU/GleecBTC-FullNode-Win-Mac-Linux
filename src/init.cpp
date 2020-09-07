@@ -923,6 +923,8 @@ bool AppInitBasicSetup()
     return true;
 }
 
+int32_t komodo_init();
+
 bool AppInitParameterInteraction()
 {
     const CChainParams& chainparams = Params();
@@ -946,7 +948,9 @@ bool AppInitParameterInteraction()
     if (!fs::is_directory(GetBlocksDir())) {
         return InitError(strprintf(_("Specified blocks directory \"%s\" does not exist.").translated, gArgs.GetArg("-blocksdir", "").c_str()));
     }
-
+    
+    komodo_init();
+    
     // parse and validate enabled filter types
     std::string blockfilterindex_value = gArgs.GetArg("-blockfilterindex", DEFAULT_BLOCKFILTERINDEX);
     if (blockfilterindex_value == "" || blockfilterindex_value == "1") {
@@ -962,7 +966,7 @@ bool AppInitParameterInteraction()
             g_enabled_filter_types.push_back(filter_type);
         }
     }
-
+    
     // if using block pruning, then disallow txindex
     if (gArgs.GetArg("-prune", 0)) {
         if (gArgs.GetBoolArg("-txindex", DEFAULT_TXINDEX))
